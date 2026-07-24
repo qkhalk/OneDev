@@ -1,15 +1,19 @@
 'use client'
 
-import { Bell, Search, Settings } from 'lucide-react'
+import { Bell, Search, Settings, Command } from 'lucide-react'
 
 export default function TopBar() {
   return (
     <header
-      className="h-16 flex-shrink-0 border-b flex items-center justify-between px-6"
-      style={{ borderColor: 'var(--border)', background: 'var(--bg-secondary)' }}
+      className="h-14 flex-shrink-0 flex items-center justify-between px-5 relative z-10"
+      style={{
+        background: 'rgba(10, 11, 15, 0.6)',
+        backdropFilter: 'blur(20px)',
+        borderBottom: '1px solid var(--border)',
+      }}
     >
-      <div className="flex items-center gap-4 flex-1">
-        <div className="relative max-w-md flex-1">
+      <div className="flex items-center gap-3 flex-1 max-w-md">
+        <div className="relative flex-1">
           <Search
             className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
             style={{ color: 'var(--text-muted)' }}
@@ -17,34 +21,41 @@ export default function TopBar() {
           <input
             type="text"
             placeholder="Tìm kiếm..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg text-sm outline-none"
+            className="w-full pl-9 pr-12 py-1.5 rounded-[8px] text-[13px] outline-none transition-all"
             style={{
               background: 'var(--bg-tertiary)',
               border: '1px solid var(--border)',
               color: 'var(--text-primary)',
             }}
           />
+          <div
+            className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium"
+            style={{ background: 'var(--bg-elevated)', color: 'var(--text-muted)' }}
+          >
+            <Command size={9} /> K
+          </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1.5">
         <button
-          className="p-2 rounded-lg transition-colors hover:opacity-80"
-          style={{ background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}
+          className="p-2 rounded-[8px] transition-all hover:bg-white/5"
+          style={{ color: 'var(--text-secondary)' }}
         >
-          <Bell className="w-5 h-5" />
+          <Bell className="w-[18px] h-[18px]" />
         </button>
         <button
-          className="p-2 rounded-lg transition-colors hover:opacity-80"
-          style={{ background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}
+          className="p-2 rounded-[8px] transition-all hover:bg-white/5"
+          style={{ color: 'var(--text-secondary)' }}
         >
-          <Settings className="w-5 h-5" />
+          <Settings className="w-[18px] h-[18px]" />
         </button>
+        <div className="w-px h-5 mx-1" style={{ background: 'var(--border)' }} />
         <div
-          className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
-          style={{ background: 'var(--accent)' }}
+          className="w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-bold cursor-pointer transition-transform hover:scale-105"
+          style={{ background: 'var(--gradient-accent)', color: 'white' }}
         >
-          A
+          K
         </div>
       </div>
     </header>

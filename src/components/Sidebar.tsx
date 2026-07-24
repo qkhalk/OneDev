@@ -3,78 +3,19 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
+import { ChevronLeft, Zap } from 'lucide-react'
 
 const modules = [
-  {
-    name: 'Converter Hub',
-    href: '/converter',
-    icon: '🔄',
-    desc: 'Chuyển đổi format',
-    status: 'active',
-  },
-  {
-    name: 'Link Shortener',
-    href: '/shortener',
-    icon: '🔗',
-    desc: 'Rút gọn link',
-    status: 'planned',
-  },
-  {
-    name: 'File Transfer',
-    href: '/transfer',
-    icon: '📤',
-    desc: 'Upload/Download',
-    status: 'planned',
-  },
-  {
-    name: 'Cloud Manager',
-    href: '/cloud',
-    icon: '☁️',
-    desc: 'Multi-cloud quản lý',
-    status: 'planned',
-  },
-  {
-    name: 'Website Monitor',
-    href: '/monitor',
-    icon: '📡',
-    desc: 'Uptime & SSL',
-    status: 'planned',
-  },
-  {
-    name: 'VPS Dashboard',
-    href: '/vps',
-    icon: '🖥️',
-    desc: 'Quản lý VPS',
-    status: 'planned',
-  },
-  {
-    name: 'Temp Mail',
-    href: '/tempmail',
-    icon: '📧',
-    desc: 'Mail tạm thời',
-    status: 'planned',
-  },
-  {
-    name: 'API Hub',
-    href: '/api-hub',
-    icon: '🔌',
-    desc: 'API Gateway',
-    status: 'planned',
-  },
-  {
-    name: 'Bot Builder',
-    href: '/bot-builder',
-    icon: '🤖',
-    desc: 'Telegram Bot',
-    status: 'planned',
-  },
-  {
-    name: 'Prompt Market',
-    href: '/prompts',
-    icon: '💡',
-    desc: 'AI Prompt Marketplace',
-    status: 'planned',
-  },
+  { name: 'Converter Hub', href: '/converter', icon: '🔄', desc: 'Chuyển đổi format', status: 'active' },
+  { name: 'Link Shortener', href: '/shortener', icon: '🔗', desc: 'Rút gọn link', status: 'active' },
+  { name: 'File Transfer', href: '/transfer', icon: '📤', desc: 'Upload/Download', status: 'soon' },
+  { name: 'Cloud Manager', href: '/cloud', icon: '☁️', desc: 'Multi-cloud', status: 'active' },
+  { name: 'Website Monitor', href: '/monitor', icon: '📡', desc: 'Uptime & SSL', status: 'soon' },
+  { name: 'VPS Dashboard', href: '/vps', icon: '🖥️', desc: 'Quản lý VPS', status: 'soon' },
+  { name: 'Temp Mail', href: '/tempmail', icon: '📧', desc: 'Mail tạm thời', status: 'active' },
+  { name: 'API Hub', href: '/api-hub', icon: '🔌', desc: 'API Gateway', status: 'soon' },
+  { name: 'Bot Builder', href: '/bot-builder', icon: '🤖', desc: 'Telegram Bot', status: 'soon' },
+  { name: 'Prompt Market', href: '/prompts', icon: '💡', desc: 'AI Prompts', status: 'soon' },
 ]
 
 export default function Sidebar() {
@@ -83,53 +24,71 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`${
-        collapsed ? 'w-16' : 'w-64'
-      } flex-shrink-0 border-r flex flex-col transition-all duration-200`}
-      style={{ borderColor: 'var(--border)', background: 'var(--bg-secondary)' }}
+      className={`${collapsed ? 'w-[60px]' : 'w-[240px]'} flex-shrink-0 flex flex-col transition-all duration-300 relative z-10`}
+      style={{
+        background: 'rgba(10, 11, 15, 0.8)',
+        backdropFilter: 'blur(20px)',
+        borderRight: '1px solid var(--border)',
+      }}
     >
       {/* Logo */}
-      <div className="h-16 flex items-center gap-3 px-4 border-b" style={{ borderColor: 'var(--border)' }}>
+      <div
+        className="h-14 flex items-center gap-2.5 px-4 border-b"
+        style={{ borderColor: 'var(--border)' }}
+      >
         <div
-          className="w-10 h-10 rounded-lg flex items-center justify-center text-xl font-bold flex-shrink-0"
-          style={{ background: 'var(--accent)' }}
+          className="w-9 h-9 rounded-[10px] flex items-center justify-center flex-shrink-0 relative overflow-hidden"
+          style={{ background: 'var(--gradient-accent)', boxShadow: '0 2px 8px rgba(94, 106, 210, 0.3)' }}
         >
-          O
+          <Zap size={18} className="text-white" strokeWidth={2.5} />
         </div>
         {!collapsed && (
-          <span className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
-            OneDev
-          </span>
+          <div className="flex flex-col">
+            <span className="text-[15px] font-bold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+              OneDev
+            </span>
+            <span className="text-[10px] font-medium" style={{ color: 'var(--text-muted)' }}>
+              Developer Platform
+            </span>
+          </div>
         )}
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto py-2">
+      <nav className="flex-1 overflow-y-auto py-3 px-2">
         {modules.map((mod) => {
           const active = pathname?.startsWith(mod.href)
           return (
             <Link
               key={mod.href}
               href={mod.href}
-              className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors relative group`}
+              className="flex items-center gap-3 px-3 py-2 rounded-[10px] text-[13px] transition-all duration-200 relative group mb-0.5"
               style={{
                 background: active ? 'var(--accent-light)' : 'transparent',
                 color: active ? 'var(--accent-hover)' : 'var(--text-secondary)',
-                borderLeft: active ? '3px solid var(--accent)' : '3px solid transparent',
+                fontWeight: active ? 600 : 450,
               }}
               title={collapsed ? mod.name : undefined}
             >
-              <span className="text-lg flex-shrink-0">{mod.icon}</span>
+              {active && (
+                <div
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full"
+                  style={{ background: 'var(--accent)' }}
+                />
+              )}
+              <span className="text-[17px] flex-shrink-0 leading-none" style={{ filter: active ? 'none' : 'grayscale(0.3)' }}>
+                {mod.icon}
+              </span>
               {!collapsed && (
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium truncate">{mod.name}</div>
-                  <div className="text-xs opacity-60 truncate">{mod.desc}</div>
+                  <span className="truncate block">{mod.name}</span>
                 </div>
               )}
-              {!collapsed && mod.status === 'planned' && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: 'var(--bg-tertiary)', color: 'var(--text-muted)' }}>
-                  Soon
-                </span>
+              {!collapsed && mod.status === 'active' && (
+                <div
+                  className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                  style={{ background: 'var(--success)', boxShadow: '0 0 6px rgba(34, 197, 94, 0.5)' }}
+                />
               )}
             </Link>
           )
@@ -139,10 +98,13 @@ export default function Sidebar() {
       {/* Collapse toggle */}
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="p-3 text-sm border-t flex items-center justify-center"
+        className="h-10 flex items-center justify-center border-t transition-colors hover:bg-white/5"
         style={{ borderColor: 'var(--border)', color: 'var(--text-muted)' }}
       >
-        {collapsed ? '→' : '← Thu gọn'}
+        <ChevronLeft
+          size={16}
+          className={`transition-transform duration-300 ${collapsed ? 'rotate-180' : ''}`}
+        />
       </button>
     </aside>
   )
