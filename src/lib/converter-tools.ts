@@ -6,10 +6,22 @@ export interface ConverterToolOption {
   default?: string
 }
 
+export type IconName =
+  | 'FileJson'
+  | 'Link2'
+  | 'Table'
+  | 'Binary'
+  | 'KeyRound'
+  | 'Hash'
+  | 'Fingerprint'
+  | 'Globe'
+  | 'Clock'
+  | 'QrCode'
+
 export interface ConverterTool {
   id: string
   name: string
-  icon: string
+  icon: IconName
   description: string
   endpoint: string
   inputLabel: string
@@ -22,7 +34,7 @@ export const converterTools: ConverterTool[] = [
   {
     id: 'json-yaml',
     name: 'JSON ↔ YAML',
-    icon: '📄',
+    icon: 'FileJson',
     description: 'Chuyển đổi giữa JSON và YAML format',
     endpoint: '/api/converter/json-yaml',
     inputLabel: 'JSON',
@@ -32,7 +44,7 @@ export const converterTools: ConverterTool[] = [
   {
     id: 'json-xml',
     name: 'JSON ↔ XML',
-    icon: '🔗',
+    icon: 'Link2',
     description: 'Chuyển đổi giữa JSON và XML format',
     endpoint: '/api/converter/json-xml',
     inputLabel: 'JSON',
@@ -42,7 +54,7 @@ export const converterTools: ConverterTool[] = [
   {
     id: 'json-csv',
     name: 'JSON ↔ CSV',
-    icon: '📊',
+    icon: 'Table',
     description: 'Chuyển đổi giữa JSON và CSV format',
     endpoint: '/api/converter/json-csv',
     inputLabel: 'JSON',
@@ -52,7 +64,7 @@ export const converterTools: ConverterTool[] = [
   {
     id: 'base64',
     name: 'Base64',
-    icon: '🔐',
+    icon: 'Binary',
     description: 'Encode và decode Base64 string',
     endpoint: '/api/converter/base64',
     inputLabel: 'Input',
@@ -60,7 +72,7 @@ export const converterTools: ConverterTool[] = [
     bidirectional: true,
     options: [
       {
-        name: 'mode',
+        name: 'action',
         label: 'Mode',
         type: 'select',
         default: 'encode',
@@ -74,7 +86,7 @@ export const converterTools: ConverterTool[] = [
   {
     id: 'jwt',
     name: 'JWT Decoder',
-    icon: '🔑',
+    icon: 'KeyRound',
     description: 'Giải mã JWT token thành header, payload, signature',
     endpoint: '/api/converter/jwt',
     inputLabel: 'JWT Token',
@@ -83,7 +95,7 @@ export const converterTools: ConverterTool[] = [
   {
     id: 'hash',
     name: 'Hash Generator',
-    icon: '#️⃣',
+    icon: 'Hash',
     description: 'Tạo hash MD5, SHA1, SHA256, SHA512',
     endpoint: '/api/converter/hash',
     inputLabel: 'Input Text',
@@ -106,44 +118,24 @@ export const converterTools: ConverterTool[] = [
   {
     id: 'uuid',
     name: 'UUID Generator',
-    icon: '🆔',
+    icon: 'Fingerprint',
     description: 'Tạo UUID v4 ngẫu nhiên',
     endpoint: '/api/converter/uuid',
     inputLabel: 'Count',
     outputLabel: 'UUIDs',
     options: [
       {
-        name: 'version',
-        label: 'Version',
-        type: 'select',
-        default: 'v4',
-        choices: [
-          { value: 'v4', label: 'UUID v4 (Random)' },
-          { value: 'v7', label: 'UUID v7 (Time-based)' },
-        ],
-      },
-      {
         name: 'count',
         label: 'Số lượng',
         type: 'input',
         default: '1',
-      },
-      {
-        name: 'uppercase',
-        label: 'Uppercase',
-        type: 'select',
-        default: 'false',
-        choices: [
-          { value: 'false', label: 'No' },
-          { value: 'true', label: 'Yes' },
-        ],
       },
     ],
   },
   {
     id: 'url',
     name: 'URL Encode/Decode',
-    icon: '🌐',
+    icon: 'Globe',
     description: 'Encode và decode URL/URI components',
     endpoint: '/api/converter/url',
     inputLabel: 'Input',
@@ -151,7 +143,7 @@ export const converterTools: ConverterTool[] = [
     bidirectional: true,
     options: [
       {
-        name: 'mode',
+        name: 'action',
         label: 'Mode',
         type: 'select',
         default: 'encode',
@@ -165,7 +157,7 @@ export const converterTools: ConverterTool[] = [
   {
     id: 'timestamp',
     name: 'Timestamp Converter',
-    icon: '⏰',
+    icon: 'Clock',
     description: 'Chuyển đổi Unix timestamp ↔ DateTime',
     endpoint: '/api/converter/timestamp',
     inputLabel: 'Input',
@@ -173,23 +165,13 @@ export const converterTools: ConverterTool[] = [
     bidirectional: true,
     options: [
       {
-        name: 'mode',
+        name: 'action',
         label: 'Mode',
         type: 'select',
-        default: 'toDate',
+        default: 'toHuman',
         choices: [
-          { value: 'toDate', label: 'Timestamp → DateTime' },
-          { value: 'toTimestamp', label: 'DateTime → Timestamp' },
-        ],
-      },
-      {
-        name: 'unit',
-        label: 'Đơn vị Timestamp',
-        type: 'select',
-        default: 'seconds',
-        choices: [
-          { value: 'seconds', label: 'Seconds' },
-          { value: 'milliseconds', label: 'Milliseconds' },
+          { value: 'toHuman', label: 'Timestamp → DateTime' },
+          { value: 'toUnix', label: 'DateTime → Timestamp' },
         ],
       },
     ],
@@ -197,7 +179,7 @@ export const converterTools: ConverterTool[] = [
   {
     id: 'qr',
     name: 'QR Generator',
-    icon: '📱',
+    icon: 'QrCode',
     description: 'Tạo QR code từ text hoặc URL',
     endpoint: '/api/converter/qr',
     inputLabel: 'Text / URL',
@@ -212,19 +194,6 @@ export const converterTools: ConverterTool[] = [
           { value: '128', label: '128 × 128' },
           { value: '256', label: '256 × 256' },
           { value: '512', label: '512 × 512' },
-          { value: '1024', label: '1024 × 1024' },
-        ],
-      },
-      {
-        name: 'errorCorrectionLevel',
-        label: 'Error Correction',
-        type: 'select',
-        default: 'M',
-        choices: [
-          { value: 'L', label: 'Low (7%)' },
-          { value: 'M', label: 'Medium (15%)' },
-          { value: 'Q', label: 'Quartile (25%)' },
-          { value: 'H', label: 'High (30%)' },
         ],
       },
     ],
