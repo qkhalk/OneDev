@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model ShortLink {
+  id          String   @id @default(cuid())
+  alias       String   @unique
+  originalUrl String
+  password    String?
+  expiresAt   DateTime?
+  createdAt   DateTime @default(now())
+  clicks      Int      @default(0)
+  visits      Visit[]
+}
+
+model Visit {
+  id        String   @id @default(cuid())
+  linkId    String
+  ip        String?
+  userAgent String?
+  country   String?
+  device    String?
+  createdAt DateTime @default(now())
+  link      ShortLink @relation(fields: [linkId], references: [id], onDelete: Cascade)
+}
+
+model ApiKey {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  lastUsed  DateTime?
+}
