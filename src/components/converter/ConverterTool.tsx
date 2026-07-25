@@ -137,7 +137,7 @@ export default function ConverterToolComponent({ tool }: ConverterToolProps) {
               title="Convert"
               className="p-2.5 rounded-[8px] transition-all hover:scale-105 disabled:opacity-40 cursor-pointer"
               style={{ background: 'var(--gradient-accent)', color: 'white' }}>
-              {loading ? <Loader2 size={16} className="animate-spin' /> : isUuidTool ? <RefreshCw size={16} /> : <ArrowRight size={16} />}
+              {loading ? <Loader2 size={16} className="animate-spin" /> : isUuidTool ? <RefreshCw size={16} /> : <ArrowRight size={16} />}
             </button>
             {!isUuidTool && (
               <button onClick={() => setAutoConvert(!autoConvert)} title="Auto convert"
