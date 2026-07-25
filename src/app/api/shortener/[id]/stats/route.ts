@@ -73,7 +73,7 @@ export async function GET(
       clicksByDevice,
       recentVisits: link.visits
         .slice(0, 20)
-        .map((v) => ({
+        .map((v: any) => ({
           id: v.id,
           ip: v.ip,
           country: v.country,
