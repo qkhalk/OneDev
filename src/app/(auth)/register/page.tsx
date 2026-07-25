@@ -1,345 +1,95 @@
 'use client'
 
-import { useState, FormEvent } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { Zap, Github, Loader2, AlertCircle } from 'lucide-react'
-import AuthInput from '@/components/auth/AuthInput'
-
-function GoogleIcon({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M23.7663 12.2244C23.7663 11.2413 23.6824 10.5237 23.5004 9.77954H12.2395V14.2176H18.8566C18.7164 15.3842 18.0029 17.1488 16.4199 18.3367L16.3976 18.4851L19.9528 21.2393L20.1985 21.2638C22.4496 19.1826 23.7663 15.9795 23.7663 12.2244Z" fill="#4285F4"/>
-      <path d="M12.2395 24.15C15.5517 24.15 18.3394 23.0425 20.1985 21.2638L16.4199 18.3367C15.4679 19.0004 14.1932 19.4616 12.2395 19.4616C9.00134 19.4616 6.25568 17.3805 5.27559 14.4318L5.13606 14.4437L1.44127 17.2949L1.39319 17.4285C3.23832 21.0935 7.04047 24.15 12.2395 24.15Z" fill="#34A853"/>
-      <path d="M5.27559 14.4318C5.02349 13.6876 4.87832 12.8907 4.87832 12.0675C4.87832 11.2442 5.02349 10.4473 5.26159 9.70314L5.25459 9.54436L1.51368 6.65137L1.39319 6.70648C0.586523 8.31358 0.122559 10.1351 0.122559 12.0675C0.122559 13.9998 0.586523 15.8213 1.39319 17.4285L5.27559 14.4318Z" fill="#FBBC05"/>
-      <path d="M12.2395 4.67334C14.6924 4.67334 16.3484 5.73107 17.2925 6.61466L20.2825 3.70467C18.3254 1.88315 15.5517 0.984985 12.2395 0.984985C7.04047 0.984985 3.23832 4.04143 1.39319 7.70648L5.26159 10.7031C6.25568 7.75445 9.00134 5.67334 12.2395 4.67334Z" fill="#EB4335"/>
-    </svg>
-  )
-}
-
-interface FormErrors {
-  name?: string
-  email?: string
-  password?: string
-  confirmPassword?: string
-  terms?: string
-  general?: string
-}
+import { Zap, Mail, Lock, User, Eye, EyeOff, ArrowRight, Loader2 } from 'lucide-react'
 
 export default function RegisterPage() {
-  const router = useRouter()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [agree, setAgree] = useState(false)
-  const [errors, setErrors] = useState<FormErrors>({})
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const validate = (): boolean => {
-    const e: FormErrors = {}
-
-    if (!name.trim()) {
-      e.name = 'Vui lòng nhập tên'
-    } else if (name.trim().length < 2) {
-      e.name = 'Tên phải có ít nhất 2 ký tự'
-    }
-
-    if (!email) {
-      e.email = 'Vui lòng nhập email'
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      e.email = 'Email không hợp lệ'
-    }
-
-    if (!password) {
-      e.password = 'Vui lòng nhập mật khẩu'
-    } else if (password.length < 6) {
-      e.password = 'Mật khẩu phải có ít nhất 6 ký tự'
-    }
-
-    if (!confirmPassword) {
-      e.confirmPassword = 'Vui lòng xác nhận mật khẩu'
-    } else if (password !== confirmPassword) {
-      e.confirmPassword = 'Mật khẩu không khớp'
-    }
-
-    if (!agree) {
-      e.terms = 'Vui lòng đồng ý với điều khoản'
-    }
-
-    setErrors(e)
-    return Object.keys(e).length === 0
-  }
-
-  const handleSubmit = async (ev: FormEvent) => {
-    ev.preventDefault()
-    if (!validate()) return
-
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
     setLoading(true)
-    setErrors({})
-
-    try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        setErrors({ general: data.error || 'Đăng ký thất bại' })
-        return
-      }
-
-      // Success — redirect to dashboard
-      router.push('/')
-      router.refresh()
-    } catch {
-      setErrors({ general: 'Không thể kết nối đến server. Vui lòng thử lại.' })
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const clearError = (field: keyof FormErrors) => {
-    if (errors[field]) {
-      setErrors({ ...errors, [field]: undefined })
-    }
+    await new Promise(r => setTimeout(r, 1000))
+    setLoading(false)
   }
 
   return (
-    <div className="fade-in">
+    <div className="w-full max-w-[400px] fade-in">
       {/* Logo */}
-      <div className="flex flex-col items-center mb-7">
+      <div className="flex flex-col items-center mb-8">
         <div
-          className="w-12 h-12 rounded-[14px] flex items-center justify-center mb-3"
-          style={{
-            background: 'var(--gradient-accent)',
-            boxShadow: '0 4px 16px rgba(94,106,210,0.35)',
-          }}
+          className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+          style={{ background: 'var(--text)', color: 'var(--bg-base)' }}
         >
-          <Zap size={24} className="text-white" strokeWidth={2.5} />
+          <Zap size={24} strokeWidth={2.5} />
         </div>
-        <h1
-          className="text-[22px] font-bold tracking-tight"
-          style={{ color: 'var(--text-primary)' }}
-        >
+        <h1 className="text-[22px] font-semibold tracking-tight" style={{ color: 'var(--text)' }}>
           Tạo tài khoản
         </h1>
-        <p
-          className="text-[14px] mt-1"
-          style={{ color: 'var(--text-muted)' }}
-        >
-          Bắt đầu hành trình của bạn
+        <p className="text-[14px] mt-1" style={{ color: 'var(--text-secondary)' }}>
+          Bắt đầu với OneDev miễn phí
         </p>
       </div>
 
-      {/* Card */}
-      <div
-        className="p-7"
-        style={{
-          background: 'var(--bg-secondary)',
-          border: '1px solid var(--border)',
-          borderRadius: '16px',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-        }}
-      >
-        {/* General error */}
-        {errors.general && (
-          <div
-            className="flex items-start gap-2 p-3 mb-4 text-[13px] rounded-[10px] fade-in"
-            style={{
-              background: 'var(--danger-light)',
-              border: '1px solid rgba(239,68,68,0.2)',
-              color: 'var(--danger)',
-            }}
-          >
-            <AlertCircle size={16} strokeWidth={2.5} className="flex-shrink-0 mt-0.5" />
-            <span>{errors.general}</span>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
-          <AuthInput
-            label="Họ và tên"
-            type="text"
-            icon="User"
-            value={name}
-            onChange={(v) => { setName(v); clearError('name') }}
-            placeholder="Nguyễn Văn A"
-            error={errors.name}
-            required
-            autoComplete="name"
-          />
-
-          <AuthInput
-            label="Email"
-            type="email"
-            icon="Mail"
-            value={email}
-            onChange={(v) => { setEmail(v); clearError('email') }}
-            placeholder="email@example.com"
-            error={errors.email}
-            required
-            autoComplete="email"
-          />
-
-          <AuthInput
-            label="Mật khẩu"
-            type="password"
-            icon="Lock"
-            value={password}
-            onChange={(v) => { setPassword(v); clearError('password') }}
-            placeholder="••••••••"
-            error={errors.password}
-            required
-            autoComplete="new-password"
-          />
-
-          <AuthInput
-            label="Xác nhận mật khẩu"
-            type="password"
-            icon="Lock"
-            value={confirmPassword}
-            onChange={(v) => { setConfirmPassword(v); clearError('confirmPassword') }}
-            placeholder="••••••••"
-            error={errors.confirmPassword}
-            required
-            autoComplete="new-password"
-          />
-
-          {/* Terms checkbox */}
-          <div>
-            <label className="flex items-start gap-2 cursor-pointer group">
-              <div className="relative mt-0.5">
-                <input
-                  type="checkbox"
-                  checked={agree}
-                  onChange={(e) => { setAgree(e.target.checked); clearError('terms') }}
-                  className="sr-only peer"
-                />
-                <div
-                  className="w-[16px] h-[16px] rounded-[5px] flex items-center justify-center transition-all flex-shrink-0"
-                  style={{
-                    background: errors.terms ? 'var(--danger-light)' : agree ? 'var(--accent)' : 'var(--bg-tertiary)',
-                    border: `1.5px solid ${errors.terms ? 'var(--danger)' : agree ? 'var(--accent)' : 'var(--border-hover)'}`,
-                  }}
-                >
-                  {agree && (
-                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-                      <path d="M2.5 6L5 8.5L9.5 3.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  )}
-                </div>
-              </div>
-              <span
-                className="text-[13px] select-none group-hover:opacity-80 transition-opacity leading-relaxed"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                Tôi đồng ý với{' '}
-                <Link href="/terms" className="font-medium hover:opacity-80" style={{ color: 'var(--accent-hover)' }}>
-                  Điều khoản dịch vụ
-                </Link>{' '}
-                và{' '}
-                <Link href="/privacy" className="font-medium hover:opacity-80" style={{ color: 'var(--accent-hover)' }}>
-                  Chính sách bảo mật
-                </Link>
-              </span>
-            </label>
-            {errors.terms && (
-              <div
-                className="flex items-center gap-1.5 mt-1.5 ml-6 text-[12px] fade-in"
-                style={{ color: 'var(--danger)' }}
-              >
-                <AlertCircle size={13} strokeWidth={2.5} />
-                <span>{errors.terms}</span>
-              </div>
-            )}
-          </div>
-
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 py-[12px] rounded-[10px] text-[14px] font-semibold transition-all duration-200 mt-1 disabled:opacity-60 disabled:cursor-not-allowed"
-            style={{
-              background: 'var(--gradient-accent)',
-              color: 'white',
-              boxShadow: '0 2px 8px rgba(94,106,210,0.3)',
-            }}
-            onMouseEnter={(e) => {
-              if (!loading) {
-                e.currentTarget.style.transform = 'translateY(-1px)'
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(94,106,210,0.4)'
-              }
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)'
-              e.currentTarget.style.boxShadow = '0 2px 8px rgba(94,106,210,0.3)'
-            }}
-          >
-            {loading ? (
-              <>
-                <Loader2 size={17} className="animate-spin" />
-                <span>Đang tạo tài khoản...</span>
-              </>
-            ) : (
-              <span>Đăng ký</span>
-            )}
-          </button>
-        </form>
-
-        {/* Divider */}
-        <div className="flex items-center gap-3 my-5">
-          <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
-          <span className="text-[12px]" style={{ color: 'var(--text-muted)' }}>hoặc</span>
-          <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
-        </div>
-
-        {/* Social buttons */}
-        <div className="flex flex-col gap-2.5">
-          <button
-            type="button"
-            className="w-full flex items-center justify-center gap-2.5 py-[11px] rounded-[10px] text-[13px] font-medium transition-all duration-150 hover:bg-white/[0.03]"
-            style={{
-              background: 'transparent',
-              border: '1px solid var(--border)',
-              color: 'var(--text-primary)',
-            }}
-          >
-            <Github size={17} />
-            <span>Đăng ký với GitHub</span>
-          </button>
-
-          <button
-            type="button"
-            className="w-full flex items-center justify-center gap-2.5 py-[11px] rounded-[10px] text-[13px] font-medium transition-all duration-150 hover:bg-white/[0.03]"
-            style={{
-              background: 'transparent',
-              border: '1px solid var(--border)',
-              color: 'var(--text-primary)',
-            }}
-          >
-            <GoogleIcon size={17} />
-            <span>Đăng ký với Google</span>
-          </button>
-        </div>
+      {/* Social */}
+      <div className="space-y-2 mb-6">
+        <a href="#" className="btn btn-secondary w-full" style={{ height: 42 }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          <span>Tiếp tục với GitHub</span>
+        </a>
+        <a href="#" className="btn btn-secondary w-full" style={{ height: 42 }}>
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          <span>Tiếp tục với Google</span>
+        </a>
       </div>
 
-      {/* Footer */}
-      <p
-        className="text-center text-[14px] mt-6"
-        style={{ color: 'var(--text-muted)' }}
-      >
+      <div className="flex items-center gap-3 mb-6">
+        <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
+        <span className="text-[12px]" style={{ color: 'var(--text-muted)' }}>hoặc</span>
+        <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="text-[13px] font-medium mb-1.5 block" style={{ color: 'var(--text-secondary)' }}>Họ tên</label>
+          <div className="relative">
+            <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--text-muted)' }} />
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nguyễn Văn A" required className="input" style={{ paddingLeft: 38, height: 42 }} />
+          </div>
+        </div>
+
+        <div>
+          <label className="text-[13px] font-medium mb-1.5 block" style={{ color: 'var(--text-secondary)' }}>Email</label>
+          <div className="relative">
+            <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--text-muted)' }} />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@example.com" required className="input" style={{ paddingLeft: 38, height: 42 }} />
+          </div>
+        </div>
+
+        <div>
+          <label className="text-[13px] font-medium mb-1.5 block" style={{ color: 'var(--text-secondary)' }}>Mật khẩu</label>
+          <div className="relative">
+            <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--text-muted)' }} />
+            <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Tối thiểu 6 ký tự" required minLength={6} className="input" style={{ paddingLeft: 38, paddingRight: 38, height: 42 }} />
+            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer" style={{ color: 'var(--text-muted)' }}>
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" disabled={loading} className="btn btn-primary w-full" style={{ height: 42, opacity: loading ? 0.7 : 1 }}>
+          {loading ? <><Loader2 size={16} className="animate-spin" /> Đang tạo...</> : <>Tạo tài khoản <ArrowRight size={16} /></>}
+        </button>
+      </form>
+
+      <p className="text-[13px] text-center mt-6" style={{ color: 'var(--text-muted)' }}>
         Đã có tài khoản?{' '}
-        <Link
-          href="/login"
-          className="font-semibold transition-colors hover:opacity-80"
-          style={{ color: 'var(--accent-hover)' }}
-        >
-          Đăng nhập
-        </Link>
+        <Link href="/login" className="font-medium hover:underline" style={{ color: 'var(--text)' }}>Đăng nhập</Link>
       </p>
     </div>
   )

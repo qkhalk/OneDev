@@ -3,7 +3,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'OneDev — Developer Platform',
-  description: 'All-in-one developer toolkit: Converter, Shortener, Cloud, Mail, Monitor, VPS',
+  description: 'All-in-one developer toolkit',
 }
 
 export const viewport = {
