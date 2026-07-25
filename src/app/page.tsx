@@ -27,32 +27,53 @@ export default function HomePage() {
       {/* Hero */}
       <div className="mb-6 sm:mb-8">
         <div className="flex items-center gap-2 mb-3">
-          <div className="px-2.5 py-1 rounded-full text-[11px] font-semibold inline-flex items-center gap-1.5"
-            style={{ background: 'var(--accent-light)', color: 'var(--accent-hover)', border: '1px solid rgba(94,106,210,0.2)' }}>
-            <span className="w-1.5 h-1.5 rounded-full pulse-glow" style={{ background: 'var(--accent)' }} />
+          <div
+            className="px-2.5 py-1 rounded-full text-[11px] font-semibold inline-flex items-center gap-1.5"
+            style={{
+              background: 'var(--accent-light)',
+              color: 'var(--accent-hover)',
+              border: '1px solid rgba(94,106,210,0.2)',
+            }}
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full pulse-glow"
+              style={{ background: 'var(--accent)' }}
+            />
             v1.0 — Early Access
           </div>
         </div>
-        <h1 className="text-2xl sm:text-[32px] font-bold tracking-tight leading-tight mb-1" style={{ color: 'var(--text-primary)' }}>
+        <h1
+          className="text-2xl sm:text-[32px] font-bold tracking-tight leading-tight mb-1"
+          style={{ color: 'var(--text-primary)' }}
+        >
           Bộ công cụ <span className="gradient-text">developer</span> toàn diện
         </h1>
-        <p className="text-[13px] sm:text-[15px]" style={{ color: 'var(--text-secondary)' }}>
+        <p
+          className="text-[13px] sm:text-[14px]"
+          style={{ color: 'var(--text-secondary)' }}
+        >
           10 module — Converter, Shortener, Cloud, Mail, Monitor, VPS, API, Bot.
         </p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-6 sm:mb-8">
+      <div className="grid grid-cols-3 gap-3 mb-8">
         {stats.map((stat) => (
-          <div key={stat.label} className="card p-3 sm:p-4">
-            <div className="flex items-center justify-between mb-1.5">
+          <div key={stat.label} className="card card-hover p-4">
+            <div className="flex items-center justify-between mb-2">
               <Icon name={stat.icon} size={16} style={{ color: 'var(--text-muted)' }} />
               <ArrowUpRight size={14} style={{ color: 'var(--text-muted)' }} />
             </div>
-            <div className="text-xl sm:text-[28px] font-bold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+            <div
+              className="text-xl sm:text-[28px] font-bold tracking-tight leading-none mb-1"
+              style={{ color: 'var(--text-primary)' }}
+            >
               {stat.value}
             </div>
-            <div className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>
+            <div
+              className="text-[11px] font-medium uppercase tracking-wide"
+              style={{ color: 'var(--text-muted)' }}
+            >
               {stat.label}
             </div>
           </div>
@@ -60,15 +81,27 @@ export default function HomePage() {
       </div>
 
       {/* Module Grid */}
-      <h2 className="text-base sm:text-[18px] font-semibold tracking-tight mb-3 sm:mb-4" style={{ color: 'var(--text-primary)' }}>
+      <h2
+        className="text-[18px] font-semibold tracking-tight mb-4"
+        style={{ color: 'var(--text-primary)' }}
+      >
         Modules
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {modules.map((mod) => (
-          <Link key={mod.href} href={mod.href} className="card card-hover p-4 sm:p-5 group">
+          <Link
+            key={mod.href}
+            href={mod.href}
+            className={`card card-hover p-5 group ${mod.status === 'active' ? 'card-accent' : ''}`}
+          >
             <div className="flex items-start justify-between mb-3">
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-[12px] flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
-                style={{ background: 'var(--accent-light)', border: '1px solid var(--border)' }}>
+              <div
+                className="w-10 h-10 rounded-[12px] flex items-center justify-center transition-transform duration-200 group-hover:scale-110"
+                style={{
+                  background: 'var(--accent-light)',
+                  border: '1px solid var(--border)',
+                }}
+              >
                 <Icon name={mod.icon} size={20} style={{ color: 'var(--accent-hover)' }} />
               </div>
               {mod.status === 'active' ? (
@@ -77,15 +110,33 @@ export default function HomePage() {
                 <span className="badge badge-warning">Soon</span>
               )}
             </div>
-            <h3 className="font-semibold text-[14px] mb-1 tracking-tight" style={{ color: 'var(--text-primary)' }}>
+            <h3
+              className="font-semibold text-[14px] mb-1 tracking-tight"
+              style={{ color: 'var(--text-primary)' }}
+            >
               {mod.name}
             </h3>
-            <p className="text-[12px] sm:text-[12.5px] leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+            <p
+              className="text-[12px] leading-relaxed"
+              style={{ color: 'var(--text-secondary)' }}
+            >
               {mod.desc}
             </p>
-            <div className="mt-3 pt-3 border-t flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
-              <span className="text-[10px] font-mono" style={{ color: 'var(--text-muted)' }}>{mod.tag}</span>
-              <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: 'var(--accent-hover)' }} />
+            <div
+              className="mt-3 pt-3 border-t flex items-center justify-between"
+              style={{ borderColor: 'var(--border)' }}
+            >
+              <span
+                className="text-[10px] font-mono"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                {mod.tag}
+              </span>
+              <ArrowUpRight
+                size={14}
+                className="opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{ color: 'var(--accent-hover)' }}
+              />
             </div>
           </Link>
         ))}
