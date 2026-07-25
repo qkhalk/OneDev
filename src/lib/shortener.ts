@@ -5,8 +5,8 @@
 export function generateAlias(length = 6): string {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
   let result = ''
-  const cryptoObj = typeof crypto !== 'undefined' ? crypto : require('crypto')
-  const bytes = cryptoObj.randomBytes(length)
+  const { randomBytes } = require('crypto')
+  const bytes = randomBytes(length)
   for (let i = 0; i < length; i++) {
     result += chars[bytes[i] % chars.length]
   }
