@@ -31,8 +31,163 @@ model Visit {
 
 model ApiKey {
   id        String   @id @default(cuid())
-  key       String   @unique
+  key       String   @unique // SHA-256 hash
   name      String
+  email     String?
+  scopes    String   @default("[]") // JSON array of scope strings
+  rateLimit Int      @default(100) // requests per minute
+  enabled   Boolean  @default(true)
   createdAt DateTime @default(now())
   lastUsed  DateTime?
+  usage     ApiUsage[]
+
+  @@index([key])
+}
+
+model ApiUsage {
+  id           String   @id @default(cuid())
+  keyId        String
+  endpoint     String
+  method       String
+  statusCode   Int
+  responseTime Int
+  createdAt    DateTime @default(now())
+  key          ApiKey   @relation(fields: [keyId], references: [id], onDelete: Cascade)
+
+  @@index([keyId, createdAt])
+  @@index([endpoint])
+}
+
+model TransferFile {
+  id          String   @id @default(cuid())
+  filename    String
+  fileSize    Int
+  mimeType    String
+  uploadId    String   @unique
+  chunks      Int      @default(0)
+  uploadedChunks Int   @default(0)
+  status      String   @default("uploading")
+  password    String?
+  maxDownloads Int     @default(0)
+  downloadCount Int    @default(0)
+  expiresAt   DateTime?
+  createdAt   DateTime @default(now())
+  destination String?
+  destPath    String?
+}
+
+model Monitor {
+  id          String         @id @default(cuid())
+  name        String
+  url         String
+  type        String         @default("http") // http, https, tcp, dns
+  interval    Int            @default(60) // seconds
+  timeout     Int            @default(10) // seconds
+  enabled     Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @default(now())
+  checks      MonitorCheck[]
+  alerts      MonitorAlert[]
+}
+
+model MonitorCheck {
+  id           String   @id @default(cuid())
+  monitorId    String
+  status       String // up, down, degraded
+  responseTime Int? // ms
+  statusCode   Int?
+  message      String?
+  sslDays      Int? // days until SSL expiry
+  checkedAt    DateTime @default(now())
+  monitor      Monitor  @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  @@index([monitorId, checkedAt])
+}
+
+model MonitorAlert {
+  id        String   @id @default(cuid())
+  monitorId String
+  type      String // email, telegram, discord, webhook
+  target    String // email address, telegram chat_id, webhook URL
+  enabled   Boolean  @default(true)
+  monitor   Monitor  @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+}
+
+// ─── Prompt Marketplace ────────────────────────────────────────────────
+
+model Prompt {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  content     String
+  category    String   @default("general") // general, coding, writing, marketing, design, analysis, roleplay, education
+  tags        String   @default("[]") // JSON array
+  model       String   @default("all") // all, gpt-4, claude, gemini, midjourney
+  isPremium   Boolean  @default(false)
+  price       Float    @default(0)
+  authorName  String   @default("anonymous")
+  authorId    String?
+  likes       Int      @default(0)
+  views       Int      @default(0)
+  forks       Int      @default(0)
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  comments    PromptComment[]
+}
+
+model PromptComment {
+  id          String   @id @default(cuid())
+  promptId    String
+  authorName  String
+  content     String
+  createdAt   DateTime @default(now())
+  prompt      Prompt   @relation(fields: [promptId], references: [id], onDelete: Cascade)
+}
+
+model PromptCollection {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  isPublic    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  prompts     String   @default("[]") // JSON array of prompt IDs
+}
+
+// ─── VPS Dashboard (from ssh_dashboard) ────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  displayName  String
+  passwordHash String
+  accessToken  String   @unique
+  role         String   @default("member")
+  telegramUserId String? @unique
+  canManageVps Boolean  @default(true)
+  canUseTerminal Boolean @default(true)
+  isActive     Boolean  @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  servers      Server[]
+}
+
+model Server {
+  id          String   @id @default(cuid())
+  name        String
+  host        String
+  port        Int      @default(22)
+  username    String
+  authType    String   @default("password")
+  password    String?
+  privateKey  String?
+  group       String   @default("default")
+  tags        String   @default("[]")
+  status      String   @default("unknown")
+  lastChecked DateTime?
+  os          String?
+  createdAt   DateTime @default(now())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
 }
