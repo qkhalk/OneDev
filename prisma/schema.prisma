@@ -172,6 +172,52 @@ model User {
   servers      Server[]
 }
 
+// ─── Telegram Bot Builder ─────────────────────────────────────────────
+
+model Bot {
+  id          String    @id @default(cuid())
+  name        String
+  token       String   // AES encrypted Telegram bot token
+  username    String?  // @bot_username
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  workflows   Workflow[]
+
+  @@index([enabled])
+}
+
+model Workflow {
+  id            String   @id @default(cuid())
+  botId         String
+  name          String
+  trigger       String   @default("message") // message, command, callback, webhook, schedule
+  triggerConfig String   @default("{}") // JSON: command text, schedule cron, webhook path
+  nodes         String   @default("[]") // JSON array of workflow nodes
+  edges         String   @default("[]") // JSON array of connections
+  enabled       Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  executions    Execution[]
+  bot           Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
+
+  @@index([botId])
+  @@index([trigger])
+}
+
+model Execution {
+  id          String   @id @default(cuid())
+  workflowId  String
+  status      String   @default("pending") // pending, running, completed, failed
+  input       String?  // JSON: incoming message data
+  output      String?  // JSON: execution result
+  error       String?
+  duration    Int?     // ms
+  createdAt   DateTime @default(now())
+  workflow    Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@index([workflowId, createdAt])
+  @@index([status])
+}
+
 model Server {
   id          String   @id @default(cuid())
   name        String
