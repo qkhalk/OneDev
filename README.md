@@ -1,3 +1,13 @@
+<div align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00c6fb,1:005bea&height=170&section=header&text=OneDev&fontSize=42&fontColor=ffffff&animation=fadeIn" width="100%" />
+
+  <p>
+    <img src="https://img.shields.io/github/languages/top/qkhalk/OneDev?style=for-the-badge" alt="language" />
+    <img src="https://img.shields.io/github/stars/qkhalk/OneDev?style=for-the-badge&logo=github" alt="stars" />
+    
+  </p>
+</div>
+
 # OneDev - All-in-One Developer Platform
 
 > Bộ công cụ phát triển và vận hành toàn diện cho developer.
